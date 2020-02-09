@@ -1,3 +1,8 @@
+Thank to create this program,
+This program has been modif for internal use in my company ( whose departemen win price ), 
+just share this good program  
+
+
 # javascript-winwheel
 Create spinning prize wheels on HTML canvas with Winwheel.js
 
