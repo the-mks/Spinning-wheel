@@ -1,0 +1,204 @@
+<html>
+    <head>
+        <title>Functional Award Best Absensi</title>
+        <link rel="stylesheet" href="main.css" type="text/css" />
+        <script type="text/javascript" src="Winwheel.js"></script>
+        <script src="TweenMax.min.js"></script>
+    </head>
+    <body>
+        <div align="center">
+            <table cellpadding="0" cellspacing="0" border="0">
+                <tr>
+                    <td colspan='2'  align='center'><h1> Functional Award Jan 2020</h1></td>
+                </tr>
+                <tr>
+                    <td colspan='2'  align='center'><h1>Best Absensi  <span class="blinking"> [ Rp. 1.000.000 ] </span></h1> </td> 
+                </tr>
+                <tr>
+                    <td>
+                        <div class="power_controls">
+                            <img id="spin_button" src="spin_off.png" alt="Spin" onClick="startSpin();" />
+                        </div>
+                    </td>
+                    <td width="438" height="582" class="the_wheel" align="center" valign="center">
+                        <canvas id="canvas" width="434" height="434">
+                            <p style="{color: white}" align="center">Sorry, your browser doesn't support canvas. Please try another.</p>
+                        </canvas>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <script>
+            // Create new wheel object specifying the parameters at creation time.
+            let theWheel = new Winwheel({
+                'numSegments'   : 15,   // Specify number of segments.
+                'outerRadius'   : 212,  // Set radius to so wheel fits the background.
+                'innerRadius'   : 50,  // Set inner radius to make wheel hollow.
+                'textFontSize'  : 13,   // Set font size accordingly.
+                'textMargin'    : 0,    // Take out default margin.
+                'segments'      :       // Define segments including colour and text.
+                [
+                   {'fillStyle' : '#ee1c24', 'text' : 'IT APPS'},
+                   {'fillStyle' : '#3cb878', 'text' : 'UMUM'},
+                   {'fillStyle' : '#f6989d', 'text' : 'COLLECTION'},
+                   {'fillStyle' : '#00aef0', 'text' : 'ACCOUNTING'},
+                   {'fillStyle' : '#f26522', 'text' : 'FINANCE'},
+
+                   {'fillStyle' : '#e70697', 'text' : 'REINSURANCE'},
+                   {'fillStyle' : '#fff200', 'text' : 'FINANCE CONTROLLING'},
+                   {'fillStyle' : '#e70697', 'text' : 'IT OS'},
+                   {'fillStyle' : '#ee1c24', 'text' : 'UNDERWRITING'},
+                   {'fillStyle' : '#3cb878', 'text' : 'CUSTOMER SERVICE'},
+
+                   {'fillStyle' : '#f6989d', 'text' : 'CLAIM MOTOR'},
+                   {'fillStyle' : '#00aef0', 'text' : 'INTERNAL AUDIT'},
+                   {'fillStyle' : '#f26522', 'text' : 'SDM'},
+                   {'fillStyle' : '#e70697', 'text' : 'CLAIM NON MOTOR'},
+                   {'fillStyle' : '#fff200', 'text' : 'CSS'}
+                ],
+                'animation' :           // Define spin to stop animation.
+                {
+                    'type'     : 'spinToStop',
+                    'duration' : 5,
+                    'spins'    : 80
+                 //  'callbackSound'    : playSound,   // Function to call when the tick sound is to be triggered.
+                 //  'soundTrigger'     : 'pin'        // Specify pins are to trigger the sound, the other option is 'segment'.
+                 // 'callbackFinished' : alertPrize
+                },
+                'pins' :
+                {
+                    'number' : 45   // Number of pins. They space evenly around the wheel.
+                }
+            });
+
+            // Vars used by the code in this page to do power controls.
+            let wheelPower    = 3;
+            let wheelSpinning = false;
+
+
+            // -----------------------------------------------------------------
+            // This function is called when the segment under the prize pointer changes
+            // we can play a small tick sound here like you would expect on real prizewheels.
+            // -----------------------------------------------------------------
+            let audio = new Audio('tick.mp3');  // Create audio object and load tick.mp3 file.
+
+            function playSound()
+            {
+                // Stop and rewind the sound if it already happens to be playing.
+                audio.pause();
+                audio.currentTime = 0;
+
+                // Play the sound.
+                audio.play();
+            }
+
+                
+            // -------------------------------------------------------
+            // Function to handle the onClick on the power buttons.
+            // -------------------------------------------------------
+            function powerSelected(powerLevel)
+            {
+                // Ensure that power can't be changed while wheel is spinning.
+                if (wheelSpinning == false) {
+                    // Reset all to grey incase this is not the first time the user has selected the power.
+                    document.getElementById('pw1').className = "";
+                    document.getElementById('pw2').className = "";
+                    document.getElementById('pw3').className = "";
+
+                    // Now light up all cells below-and-including the one selected by changing the class.
+                    if (powerLevel >= 1) {
+                        document.getElementById('pw1').className = "pw1";
+                    }
+
+                    if (powerLevel >= 2) {
+                        document.getElementById('pw2').className = "pw2";
+                    }
+
+                    if (powerLevel >= 3) 
+                     {document.getElementById('pw3').className = "pw3"; }
+
+                    // Set wheelPower var used when spin button is clicked.
+                    wheelPower = powerLevel;
+
+                    // Light up the spin button by changing it's source image and adding a clickable class to it.
+                    
+                    document.getElementById('spin_button').src = "spin_on.png";
+                    document.getElementById('spin_button').className = "clickable";
+                }
+            }
+
+            // -------------------------------------------------------
+            // Click handler for spin button.
+            // -------------------------------------------------------
+            function startSpin()
+            {
+                // Ensure that spinning can't be clicked again while already running.
+                if (wheelSpinning == false) {
+                    // Based on the power level selected adjust the number of spins for the wheel, the more times is has
+                    // to rotate with the duration of the animation the quicker the wheel spins.
+                    if (wheelPower == 1) {
+                        theWheel.animation.spins = 3;
+                    } else if (wheelPower == 2) {
+                        theWheel.animation.spins = 8;
+                    } else if (wheelPower == 3) {
+                        theWheel.animation.spins = 15;
+                    }
+
+                    // Disable the spin button so can't click again while wheel is spinning.
+                    document.getElementById('spin_button').src       = "spin_off.png";
+                    document.getElementById('spin_button').className = "";
+
+                    // MK$ modif utk stop di 
+                    // let stopAt = ( 91 + Math.floor((Math.random() * 43)))
+                    // 360 / 15 = 24  1 segitiga yg pertama itu 1-24
+                    // let stopAt = 1
+                    // yang ke 1
+                    // var min=2; 
+                    // var max=22;  
+                    // yang ke 6
+                     var min=146; 
+                     var max=166;  
+                    let stopAt = Math.random() * (+max - +min) + +min; 
+      
+                    theWheel.animation.stopAngle = stopAt;
+
+                    // Begin the spin animation by calling startAnimation on the wheel object.
+                    theWheel.startAnimation();
+
+                    // Set to true so that power can't be changed and spin button re-enabled during
+                    // the current animation. The user will have to reset before spinning again.
+                    wheelSpinning = true;
+                }
+            }
+
+            // -------------------------------------------------------
+            // Function for reset button.
+            // -------------------------------------------------------
+            function resetWheel()
+            {
+                theWheel.stopAnimation(false);  // Stop the animation, false as param so does not call callback function.
+                theWheel.rotationAngle = 0;     // Re-set the wheel angle to 0 degrees.
+                theWheel.draw();                // Call draw to render changes to the wheel.
+
+                document.getElementById('pw1').className = "";  // Remove all colours from the power level indicators.
+                document.getElementById('pw2').className = "";
+                document.getElementById('pw3').className = "";
+
+                wheelSpinning = false;          // Reset to false to power buttons and spin can be clicked again.
+            }
+
+
+            // -------------------------------------------------------
+            // Called when the spin animation has finished by the callback feature of the wheel because I specified callback in the parameters.
+            // note the indicated segment is passed in as a parmeter as 99% of the time you will want to know this to inform the user of their prize.
+            // -------------------------------------------------------
+            function alertPrize(indicatedSegment)
+            {
+                // Do basic alert of the segment text. You would probably want to do something more interesting with this information.
+                alert("Pemenangnya  " + indicatedSegment.text);
+            }
+ 
+ 
+        </script>
+    </body>
+</html>
